@@ -52,4 +52,7 @@ HTML 的全称是 HyperText Markup Language，不是 ~~How To Make Love~~ 哦。
 
 ## 如何运行自己的 HTML 代码
 
-随便打开一个文本编辑器（这里没有推荐），写下一段 HTML 代码，然后直接把文件丢到浏览器中就可以看到结果了。
+随便打开一个文本编辑器（这里没有推荐），写下一段 HTML 代码，保存文件为 `.html` 结尾，然后直接把文件丢到浏览器中就可以看到结果了。
+
+
+>感觉 HTML 没有什么可以讲的，大家看 [W3School](http://www.w3schools.com/html/default.asp) 吧！（逃
