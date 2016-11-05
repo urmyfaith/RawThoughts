@@ -5,7 +5,7 @@ HTML 的全称是 HyperText Markup Language，不是 ~~How To Make Love~~ 哦。
 
 既然作为一种编程语言（也有人说它不是），HTML 自然也有它自己的语法规则，当然这些规则非常地简单。先来一段 HTML 看看：
 
-```HTML
+```html
 <p>Hello World!</p>
 ```
 
@@ -19,7 +19,7 @@ HTML 的全称是 HyperText Markup Language，不是 ~~How To Make Love~~ 哦。
 
 当然，单用这些标签是无法满足 HTML 的需求的，我们还需要对这这些标签添加一些属性（attributes），道理很简单，看下面一段 HTML：
 
-```HTML
+```html
 <a>X140Yu's Blog</a>
 ```
 
@@ -27,13 +27,13 @@ HTML 的全称是 HyperText Markup Language，不是 ~~How To Make Love~~ 哦。
 
 我知道这是一个 `<a>` （anchor，也可以理解为链接）标签，它的内容是 `X140Yu's Blog`，但它真正指向的 URL 信息我们应该填充到哪里呢？所以这就需要属性出场了：
 
-```HTML
+```html
 <a href="http://x140yu.com">X140Yu's Blog</a>
 ```
 
 `<a>` 标签有这样一个 `href` 属性，它代表当前标签指向的链接地址。我们要给它再多加一种属性怎么办？
 
-```HTML
+```html
 <a href="http://x140yu.com" target="_blank">X140Yu's Blog</a>
 ```
 
@@ -45,7 +45,7 @@ HTML 的全称是 HyperText Markup Language，不是 ~~How To Make Love~~ 哦。
 
 因为代码多数时间是给人来看的，所以注释就是不可避免的，在 HTML 中写注释可能会有点麻烦，不过爱写注释肯定是好习惯啊 ~。~：
 
-```HTML
+```html
 <!-- 我是注释 -->
 <p>Hello World!</p>
 ```
