@@ -41,3 +41,12 @@ p { display: inline; }
 注意一点，如果内容超出了 `width & height` 的区域，设置 `overflow` 属性可以避免超出的内容显示的有问题。
 
 #### border & padding & marigin
+
+- Content - The content of the box, where text and images appear
+- Padding - Clears an area around the content. The padding is transparent
+- Border - A border that goes around the padding and content
+- Margin - Clears an area outside the border. The margin is transparent
+
+网上有很多关于 box model 的解释，其实很简单，看懂一张图就全明白了：
+
+![](http://ww2.sinaimg.cn/large/5cc3eefejw1f9i64ygt9yj207705e0sk.jpg)
