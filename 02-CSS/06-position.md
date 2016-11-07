@@ -7,6 +7,7 @@ static 是默认的值
 - relative
 很好理解，位置是相对的，比较的对象是它原本的位置。
 - absolute
+
 先介绍一下 positioned 的概念：当一个元素的 position 是 relative || absolute || fixed 的时候，那它就 positioned 了。
 而当 position 是 absolute 的时候，这个元素的位置是根据它第一个已经 positioned 的祖先而确定的。
 
