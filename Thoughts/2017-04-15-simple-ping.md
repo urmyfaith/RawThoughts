@@ -4,8 +4,8 @@
 
 - [读 Apple Sample Code 之 Simple Ping](#%E8%AF%BB-apple-sample-code-%E4%B9%8B-simple-ping)
   - [关于 ping](#%E5%85%B3%E4%BA%8E-ping)
-  - [Demo 中 Simple Ping 的使用](#demo-%E4%B8%AD-simple-ping-%E7%9A%84%E4%BD%BF%E7%94%A8)
-  - [实现原理](#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86)
+  - [Demo 中 SimplePing 的使用](#demo-%E4%B8%AD-simpleping-%E7%9A%84%E4%BD%BF%E7%94%A8)
+  - [SimplePing 的实现原理](#simpleping-%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -27,7 +27,7 @@ ping 是通过网络层的 IP 协议发送 ICMP 协议的数据包，然后等�
 
 Demo 中使用 SimplePing 的基本流程如下，
 
-![使用 SimplePing 的基本流程](media/2017-04-15-simple-ping-01.png)
+![](media/2017-04-15-simple-ping-01.png)
 
 其实主要的流程也就以下几个部分，
 
@@ -36,6 +36,49 @@ Demo 中使用 SimplePing 的基本流程如下，
 - 在需要的情况下调用 `send` 方法。探测对应的 host，delegate 中的回调就会得到对应的回应了。 
 
 ## SimplePing 的实现原理
+
+ping 的实现过程并不复杂，一共以下几个步骤，
+
+- 解析传入的 host，获取第一个可用 IP 地址
+- 创建传输/接收数据的 socket
+- 发送数据，封装一个 ICMP 包 
+- 解析目标 IP 传回的 ICMP 包
+
+不要觉得 ICMP 包之类是什么高深高难的词语，其实它就是一个协议。双方规定好一个数据包的前几个字节是什么，后几个字节是什么，双方按照正确的格式封装包的数据发送或者解析就可以了。
+
+![](media/2017-04-15-simple-ping-02.png)
+
+ICMP 是位于网络层的一个协议，它依靠 IP 来完成工作。如上图所示，ICMP 的包会有 IP 的 header，但这个 header 对于我们实现 ping 是没有什么必要性的，可以看到代码也有一个方法 `icmpHeaderOffsetInIPv4Packet:` 计算 IP header 的 offset 从而直接跳过 IP 头。
+
+项目中对 ICMPHeader 也做出了定义，
+
+```c
+struct ICMPHeader {
+    // iPv4 or iPv6
+    uint8_t     type;
+    // 0
+    uint8_t     code;
+    // 0
+    uint16_t    checksum;
+    // 初始化 host 的时候随机生成的 id
+    uint16_t    identifier;
+    // 类内部维护的，发送 ping 数据的序号
+    uint16_t    sequenceNumber;
+    // data...
+};
+typedef struct ICMPHeader ICMPHeader;
+```
+
+发送 ping 数据的时候，会对一个 ICMPHeader 结构体进行初始化，除了上述的几个字段，结合上面的那张图看到，还有 payload，如果调用者没有指定发送的 payload，方法内部会添加默认的 payload。
+
+接收回应的时候，会对 ICMP 包进行校验，也会跳过 IP 头，其中主要验证的字段是 checksum 和 sequenceNumber（iPv6 只需要验证 sequenceNumber）。checksum 的计算根据的是标准的 BSD checksum 生成函数，主要依据是 ICMP 包，计算规则没细看，因为它是一种标准嘛（想看的同学可以看这里 [IPv4 header checksum](https://en.wikipedia.org/wiki/IPv4_header_checksum)）。
+
+至此，一次 ping 的完整流程就结束了。
+
+## 一些其它的点
+
+上次看了 Reachability，这次看了 Simple Ping，其实都是对 Core Foundation 中的 C 函数进行封装。其中让我觉得比较关键的点就是对 Core Foundation 中异步函数的调用和内存管理问题。
+
 
 Core Foundation 中的异步方法设置一般需要以下几个步骤，
 
@@ -59,10 +102,6 @@ static void HostResolveCallback(CFHostRef theHost, CFHostInfoType typeInfo, cons
 在 callback 中，如果没有错误，就可以开始解析 `CFHostRef` 中的 IP 地址了，这里是只取了 IP 地址列表中的第一个，如果它的 AddressStyle(iPv4 or iPv6) 不是所期望的 Style，也会提示失败。不管成功还是失败都会把 `self.host` 给释放掉，因为它的作用只是获得 host 所对应的的一个 IP 地址而已。
 
 然后就开始的 ping 的过程(`startWithHostAddress`)，
-
-- 根据 hostAddressFamily 创建对应的 socket
-- 
-
 
 
 
