@@ -1,6 +1,6 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+**Table Of Contents**
 
 - [读 AFNetworking 源码之 Reachability](#%E8%AF%BB-afnetworking-%E6%BA%90%E7%A0%81%E4%B9%8B-reachability)
   - [Reachability 是什么？](#reachability-%E6%98%AF%E4%BB%80%E4%B9%88)

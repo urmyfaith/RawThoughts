@@ -1,6 +1,6 @@
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+**Table Of Contents**
 
 - [如何写好 commit message？](#%E5%A6%82%E4%BD%95%E5%86%99%E5%A5%BD-commit-message)
     - [1. Subject 和 body 之间要留一个空行](#1-subject-%E5%92%8C-body-%E4%B9%8B%E9%97%B4%E8%A6%81%E7%95%99%E4%B8%80%E4%B8%AA%E7%A9%BA%E8%A1%8C)
