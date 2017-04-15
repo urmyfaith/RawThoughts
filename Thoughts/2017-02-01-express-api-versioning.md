@@ -3,7 +3,7 @@
 **Table Of Contents**
 
 - [Express.js 中的 API 版本控制](#expressjs-%E4%B8%AD%E7%9A%84-api-%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6)
-  - [How?](#how)
+  - [能够实现的几种方式](#%E8%83%BD%E5%A4%9F%E5%AE%9E%E7%8E%B0%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F)
     - [`/api/v1/xxx`](#apiv1xxx)
     - [`API-VERSION: 3.0`](#api-version-30)
     - [`Accept: application/vnd.xxx.v2+json`](#accept-applicationvndxxxv2json)
@@ -61,9 +61,9 @@
 
 Boom! 这下可糟了，如果 API 产生了这么重大的变化，那么已经发出去的 1.0 版本的客户端可怎么办啊？（开发过客户端的同学都知道，同一个接口返回这么「脏」的数据是会 crash 的）。这个时候，就需要 API versioning（版本化）了。
 
-## How?
+## 能够实现的几种方式
 
-通常来说，API 版本控制有以下几种方式：
+通常来说，API 版本控制有以下几种方式，
 
 ### `/api/v1/xxx`
 
