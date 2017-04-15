@@ -1,3 +1,21 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [读 AFNetworking 源码之 Reachability](#%E8%AF%BB-afnetworking-%E6%BA%90%E7%A0%81%E4%B9%8B-reachability)
+  - [Reachability 是什么？](#reachability-%E6%98%AF%E4%BB%80%E4%B9%88)
+  - [Reachability 的几个实现](#reachability-%E7%9A%84%E5%87%A0%E4%B8%AA%E5%AE%9E%E7%8E%B0)
+  - [AFNetworkReachabilityManager](#afnetworkreachabilitymanager)
+    - [使用及注意事项](#%E4%BD%BF%E7%94%A8%E5%8F%8A%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9)
+      - [1. 初始化对象](#1-%E5%88%9D%E5%A7%8B%E5%8C%96%E5%AF%B9%E8%B1%A1)
+      - [2. 开启监听](#2-%E5%BC%80%E5%90%AF%E7%9B%91%E5%90%AC)
+      - [3. 接收通知](#3-%E6%8E%A5%E6%94%B6%E9%80%9A%E7%9F%A5)
+      - [4. 停止监听](#4-%E5%81%9C%E6%AD%A2%E7%9B%91%E5%90%AC)
+    - [实现](#%E5%AE%9E%E7%8E%B0)
+    - [总结](#%E6%80%BB%E7%BB%93)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # 读 AFNetworking 源码之 Reachability
 
 ## Reachability 是什么？

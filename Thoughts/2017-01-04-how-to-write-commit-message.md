@@ -1,3 +1,18 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [如何写好 commit message？](#%E5%A6%82%E4%BD%95%E5%86%99%E5%A5%BD-commit-message)
+    - [1. Subject 和 body 之间要留一个空行](#1-subject-%E5%92%8C-body-%E4%B9%8B%E9%97%B4%E8%A6%81%E7%95%99%E4%B8%80%E4%B8%AA%E7%A9%BA%E8%A1%8C)
+    - [2. 把 subject 控制在 50 个字符之内](#2-%E6%8A%8A-subject-%E6%8E%A7%E5%88%B6%E5%9C%A8-50-%E4%B8%AA%E5%AD%97%E7%AC%A6%E4%B9%8B%E5%86%85)
+    - [3. Subject 的首字母大写](#3-subject-%E7%9A%84%E9%A6%96%E5%AD%97%E6%AF%8D%E5%A4%A7%E5%86%99)
+    - [4. Subject 的结尾不要加标点符号](#4-subject-%E7%9A%84%E7%BB%93%E5%B0%BE%E4%B8%8D%E8%A6%81%E5%8A%A0%E6%A0%87%E7%82%B9%E7%AC%A6%E5%8F%B7)
+    - [5. 在 subject 中，使用 imperative 的语句](#5-%E5%9C%A8-subject-%E4%B8%AD%E4%BD%BF%E7%94%A8-imperative-%E7%9A%84%E8%AF%AD%E5%8F%A5)
+    - [6. 控制 body 每行的长度在 72 个字符](#6-%E6%8E%A7%E5%88%B6-body-%E6%AF%8F%E8%A1%8C%E7%9A%84%E9%95%BF%E5%BA%A6%E5%9C%A8-72-%E4%B8%AA%E5%AD%97%E7%AC%A6)
+    - [7. 用 body 说明这次 commit 的 what, why, how](#7-%E7%94%A8-body-%E8%AF%B4%E6%98%8E%E8%BF%99%E6%AC%A1-commit-%E7%9A%84-what-why-how)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # 如何写好 commit message？
 
 Commit message 是每个开发人员每天都要写的东西，可是大多数人都会以一个 bug fix 或者 update xxx 草草了事。那么什么是好的 commit message 呢？我看到了一篇[好文](http://chris.beams.io/posts/git-commit/) ，顺手给大家总结了一下

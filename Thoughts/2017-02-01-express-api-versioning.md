@@ -1,3 +1,17 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Express.js 中的 API 版本控制](#expressjs-%E4%B8%AD%E7%9A%84-api-%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6)
+  - [How?](#how)
+    - [`/api/v1/xxx`](#apiv1xxx)
+    - [`API-VERSION: 3.0`](#api-version-30)
+    - [`Accept: application/vnd.xxx.v2+json`](#accept-applicationvndxxxv2json)
+  - [`/api/v1/post/:id`](#apiv1postid)
+  - [`Accept-Version: 1.0`](#accept-version-10)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # Express.js 中的 API 版本控制
 
 在讲 Express.js 中实现 API 版本控制之前，先来看看为什么要做服务器端的 API 版本控制。
