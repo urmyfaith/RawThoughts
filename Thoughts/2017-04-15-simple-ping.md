@@ -6,6 +6,9 @@
   - [关于 ping](#%E5%85%B3%E4%BA%8E-ping)
   - [Demo 中 SimplePing 的使用](#demo-%E4%B8%AD-simpleping-%E7%9A%84%E4%BD%BF%E7%94%A8)
   - [SimplePing 的实现原理](#simpleping-%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86)
+  - [关于 Core Foundation](#%E5%85%B3%E4%BA%8E-core-foundation)
+    - [异步函数的调用](#%E5%BC%82%E6%AD%A5%E5%87%BD%E6%95%B0%E7%9A%84%E8%B0%83%E7%94%A8)
+    - [内存管理](#%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -15,7 +18,7 @@
 
 这个示例的封装实现了最基本的 ping 功能，其中包括 resolve host，create socket(send & recv data), 解析 ICMP 包验证 checksum 等。同时支持 iPv4 和 iPv6。其实就是对 Core Foundation 中网络相关的 C 函数的封装。
 
-## 关于 ping
+## ping
 
 ping 是通过网络层的 IP 协议发送 ICMP 协议的数据包，然后等待目标回传 ICMP 数据包，通过时间和成功响应的次数估算丢包率和网络时延。
 
@@ -50,7 +53,7 @@ ping 的实现过程并不复杂，一共以下几个步骤，
 
 ICMP 是位于网络层的一个协议，它依靠 IP 来完成工作。如上图所示，ICMP 的包会有 IP 的 header，但这个 header 对于我们实现 ping 是没有什么必要性的，可以看到代码也有一个方法 `icmpHeaderOffsetInIPv4Packet:` 计算 IP header 的 offset 从而直接跳过 IP 头。
 
-项目中对 ICMPHeader 也做出了定义，
+Simple Ping 也对 ICMPHeader 也做出了定义，
 
 ```c
 struct ICMPHeader {
@@ -75,17 +78,36 @@ typedef struct ICMPHeader ICMPHeader;
 
 至此，一次 ping 的完整流程就结束了。
 
-## 一些其它的点
+## 关于 Core Foundation
 
 上次看了 Reachability，这次看了 Simple Ping，其实都是对 Core Foundation 中的 C 函数进行封装。其中让我觉得比较关键的点就是对 Core Foundation 中异步函数的调用和内存管理问题。
 
+### 异步函数的调用
 
 Core Foundation 中的异步方法设置一般需要以下几个步骤，
 
-- 创建相关的 context，一般都是把 self 存到 info 字段中，方便从 callback 中提取出对象然后调用处理的 Objective-C 方法（`CFHostClientContext context = {0, (__bridge void *)(self), NULL, NULL, NULL};`）
-- 创建一个与 callback 函数指针相同签名的静态函数，处理异步方法回调后的逻辑
+```objc
+- (void)start {
+    Boolean             success;
+    CFHostClientContext context = {0, (__bridge void *)(self), NULL, NULL, NULL};
+    CFStreamError       streamError;
+
+    // 1. 创建相关的 context，一般都是把 self 存到 info 字段中，方便从 callback 中提取出对象然后调用处理的 Objective-C 方法
+    self.host = (CFHostRef) CFAutorelease( CFHostCreateWithName(NULL, (__bridge CFStringRef) self.hostName) );
+    // 2. 创建一个与 callback 函数指针相同签名的静态函数，处理异步方法回调后的逻辑，设置 context 等相关参数  
+    CFHostSetClient(self.host, HostResolveCallback, &context);
+    // 3. 设置函数需要执行的 runloop 及 runloop mode
+    CFHostScheduleWithRunLoop(self.host, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);
+    // 4. 开始执行，如果成功，那我们的 callback 就会被调用，失败会立即返回 nil
+    success = CFHostStartInfoResolution(self.host, kCFHostAddresses, &streamError);
+    if (!success) {
+        // handle error
+    }
+}
+```
 
 ```c
+/// 在 callback 中，就可以取出我们之前传入的 info 等字段（也就是注册回调的 SimplePing 对象）
 static void HostResolveCallback(CFHostRef theHost, CFHostInfoType typeInfo, const CFStreamError *error, void *info) {
     /// 从 info 中就可以取出 Objective-C 中的 object
     SimplePing *obj = (__bridge SimplePing *) info;
@@ -93,15 +115,29 @@ static void HostResolveCallback(CFHostRef theHost, CFHostInfoType typeInfo, cons
 }
 ```
 
-- 设置 callback、context 等相关参数 `CFHostSetClient(self.host, HostResolveCallback, &context);`
+本质上就是从 C 的静态方法到调用 Objective-C 对象方法的过程，多数的异步函数都是这种调用方式，基本都是套路化的，同时也比较原始，需要写很多代码。
 
-- 设置函数需要执行的 runloop 及 runloop mode `CFHostScheduleWithRunLoop(self.host, CFRunLoopGetCurrent(), kCFRunLoopDefaultMode);`
-- 开始执行 `CFHostStartInfoResolution(self.host, kCFHostAddresses, &streamError)`，如果成功，那我们的 callback 就会被调用。
+### 内存管理
+
+Core Foundation 并不支持 ARC，它里面的对象都是需要手动管理内存的。
+
+根据 Apple 的[文档](https://developer.apple.com/library/content/documentation/CoreFoundation/Conceptual/CFDesignConcepts/Articles/tollFreeBridgedTypes.html)，
+
+>The compiler does not automatically manage the lifetimes of Core Foundation objects. You tell the compiler about the ownership semantics of objects using either a cast (defined in objc/runtime.h) or a Core Foundation-style macro (defined in NSObject.h):
+- `__bridge` transfers a pointer between Objective-C and Core Foundation with no transfer of ownership.
+- `__bridge_retained` or `CFBridgingRetain` casts an Objective-C pointer to a Core Foundation pointer and also transfers ownership to you.
+You are responsible for calling CFRelease or a related function to relinquish ownership of the object.
+- `__bridge_transfer` or `CFBridgingRelease` moves a non-Objective-C pointer to Objective-C and also transfers ownership to ARC.
+ARC is responsible for relinquishing ownership of the object.
 
 
-在 callback 中，如果没有错误，就可以开始解析 `CFHostRef` 中的 IP 地址了，这里是只取了 IP 地址列表中的第一个，如果它的 AddressStyle(iPv4 or iPv6) 不是所期望的 Style，也会提示失败。不管成功还是失败都会把 `self.host` 给释放掉，因为它的作用只是获得 host 所对应的的一个 IP 地址而已。
+- 利用 Core Foundation API 创建出来的对象（一般是指针类型的），最后都需要我们自己释放（CFRelease）
+- 通过 `__bridge` 转换 OC 和 CF 对象只涉及类型的变化，内存管理权并不发生改变
+- 通过 `__bridge_retained` 或 `CFBridgingRetain` 把 OC -> CF 对象，此时这个对象的内存需要你手动管理
+- 通过 `__bridge_transfer` 或 `CFBridgingRelease` 把 CF -> OC 对象，它之后的内存就交给 ARC 来管理，你就不需要负责它的内存处理了
 
-然后就开始的 ping 的过程(`startWithHostAddress`)，
+
+
 
 
 
