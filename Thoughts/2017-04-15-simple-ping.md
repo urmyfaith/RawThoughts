@@ -124,12 +124,13 @@ Core Foundation 并不支持 ARC，它里面的对象都是需要手动管理内
 根据 Apple 的[文档](https://developer.apple.com/library/content/documentation/CoreFoundation/Conceptual/CFDesignConcepts/Articles/tollFreeBridgedTypes.html)，
 
 >The compiler does not automatically manage the lifetimes of Core Foundation objects. You tell the compiler about the ownership semantics of objects using either a cast (defined in objc/runtime.h) or a Core Foundation-style macro (defined in NSObject.h):
-- `__bridge` transfers a pointer between Objective-C and Core Foundation with no transfer of ownership.
-- `__bridge_retained` or `CFBridgingRetain` casts an Objective-C pointer to a Core Foundation pointer and also transfers ownership to you.
+>- `__bridge` transfers a pointer between Objective-C and Core Foundation with no transfer of ownership.
+>- `__bridge_retained` or `CFBridgingRetain` casts an Objective-C pointer to a Core Foundation pointer and also transfers ownership to you.
 You are responsible for calling CFRelease or a related function to relinquish ownership of the object.
-- `__bridge_transfer` or `CFBridgingRelease` moves a non-Objective-C pointer to Objective-C and also transfers ownership to ARC.
+>- `__bridge_transfer` or `CFBridgingRelease` moves a non-Objective-C pointer to Objective-C and also transfers ownership to ARC.
 ARC is responsible for relinquishing ownership of the object.
 
+也就是说，
 
 - 利用 Core Foundation API 创建出来的对象（一般是指针类型的），最后都需要我们自己释放（CFRelease）
 - 通过 `__bridge` 转换 OC 和 CF 对象只涉及类型的变化，内存管理权并不发生改变
