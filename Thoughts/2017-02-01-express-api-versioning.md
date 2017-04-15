@@ -7,8 +7,9 @@
     - [`/api/v1/xxx`](#apiv1xxx)
     - [`API-VERSION: 3.0`](#api-version-30)
     - [`Accept: application/vnd.xxx.v2+json`](#accept-applicationvndxxxv2json)
-  - [`/api/v1/post/:id`](#apiv1postid)
-  - [`Accept-Version: 1.0`](#accept-version-10)
+  - [Express.js 中的实现](#expressjs-%E4%B8%AD%E7%9A%84%E5%AE%9E%E7%8E%B0)
+    - [`/api/v1/post/:id`](#apiv1postid)
+    - [`Accept-Version: 1.0`](#accept-version-10)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -86,7 +87,9 @@ Boom! 这下可糟了，如果 API 产生了这么重大的变化，那么已经
 
 最近在用 Node.js 做一个小项目 [DayCache](https://github.com/DayCache/DayCache)，其中就涉及到了给客户端提供 API 调用这一块,当然就也需要 API 的版本控制了。
 
-## `/api/v1/post/:id`
+## Express.js 中的实现
+
+### `/api/v1/post/:id`
 
 ```
 // Version 1
@@ -156,7 +159,7 @@ module.exports = function (app) {
 
 这样，API 版本化的工作就已经完成了，而且不同版本的 API 拆分地比较干净，同一个版本不同路径的请求也都在不同的文件中。
 
-## `Accept-Version: 1.0`
+### `Accept-Version: 1.0`
 
 对于这种请求的 API 版本放到 header 中的，也比较好处理，可以看一下 [express-routes-versioning](https://github.com/Prasanna-sr/express-routes-versioning) 这个中间件（毕竟 Express.js，中间件就是多），它就是比较优雅地处理了这个问题：
 
@@ -185,3 +188,5 @@ function respondV2(req, res, next) {
 
 把请求 header 中 `Accept-Version` 不同的 API 版本挂在到不同的 handler 中，而且还可以使用类似于 `~2.2.1` 的方式指定版本号。
 这个中间件的代码没有多少，可以根据你的需要定制一个，比如 custom header 啦，版本号的匹配规则啦。
+
+
