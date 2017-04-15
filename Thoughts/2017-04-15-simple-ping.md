@@ -3,7 +3,7 @@
 **Table Of Contents**
 
 - [读 Apple Sample Code 之 Simple Ping](#%E8%AF%BB-apple-sample-code-%E4%B9%8B-simple-ping)
-  - [关于 ping](#%E5%85%B3%E4%BA%8E-ping)
+  - [ping](#ping)
   - [Demo 中 SimplePing 的使用](#demo-%E4%B8%AD-simpleping-%E7%9A%84%E4%BD%BF%E7%94%A8)
   - [SimplePing 的实现原理](#simpleping-%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86)
   - [关于 Core Foundation](#%E5%85%B3%E4%BA%8E-core-foundation)
